@@ -43,6 +43,9 @@ function recalc() {
   if (ftt < 1 || ftt > 3)
     errors.push('FTT must be between 1 and 3.');
 
+  if (readPct < 1 || readPct > 100)
+    errors.push('Read percentage must be between 1 and 100.');
+
   /* ===============================
      Availability Policy Guardrails
   =============================== */
