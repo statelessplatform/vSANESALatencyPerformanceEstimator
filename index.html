@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vSAN ESA 9.0 Latency & Performance Estimator</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+<header class="header">
+  <h1>
+    <div class="logo">⚡</div>
+    vSAN ESA 9.0 Latency & Performance Estimator
+  </h1>
+  <div class="status-indicator">
+    <div class="status-dot"></div>Live Update
+  </div>
+</header>
+
+<div class="main-container">
+
+<!-- CONFIGURATION -->
+<div class="panel input-panel">
+  <div class="panel-header">
+    <div class="panel-icon">⚙️</div>Configuration
+  </div>
+
+  <div class="panel-body">
+
+    <!-- Cluster -->
+    <div class="section">
+      <div class="section-title">Cluster Profile</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Number of Hosts</label>
+          <input id="hosts" type="number" class="form-control" value="6">
+        </div>
+        <div class="form-group">
+          <label class="form-label">NVMe Drives per Host</label>
+          <input id="drives" type="number" class="form-control" value="6">
+        </div>
+      </div>
+    </div>
+
+    <!-- Protection -->
+    <div class="section">
+      <div class="section-title">Availability Policy</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">FTT Level</label>
+          <select id="ftt" class="form-control">
+            <option value="1">FTT = 1</option>
+            <option value="2">FTT = 2</option>
+            <option value="3">FTT = 3</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">FTT Type</label>
+          <select id="fttType" class="form-control">
+            <option value="mirror">Mirroring (RAID-1)</option>
+            <option value="raid5">Erasure Coding (RAID-5)</option>
+            <option value="raid6">Erasure Coding (RAID-6)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Workload -->
+    <div class="section">
+      <div class="section-title">Workload Profile</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Number of VMs</label>
+          <input id="vms" type="number" class="form-control" value="100">
+        </div>
+        <div class="form-group">
+          <label class="form-label">IOPS per VM</label>
+          <input id="iopsPerVm" type="number" class="form-control" value="200">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Read %</label>
+          <input id="readPct" type="number" class="form-control" value="70">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Block Size</label>
+          <select id="blockSize" class="form-control">
+            <option value="8">8 KB</option>
+            <option value="16">16 KB</option>
+            <option value="32">32 KB</option>
+            <option value="64">64 KB</option>
+            <option value="128">128 KB</option>
+            <option value="256">256 KB</option>
+            <option value="512">512 KB</option>
+            <option value="1024">1 MB</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Platform -->
+    <div class="section">
+      <div class="section-title">ESA Platform Latency</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">NVMe Device Latency (µs)</label>
+          <input id="nvme" type="number" class="form-control" value="80">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Network RTT (µs)</label>
+          <input id="rtt" type="number" class="form-control" value="100">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">ESA Software Overhead (µs)</label>
+          <input id="esa" type="number" class="form-control" value="150">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="panel results-panel">
+  <div class="panel-header">
+    <div class="panel-icon">📊</div>Results & Analysis
+  </div>
+
+  <div class="panel-body">
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div id="readLat" class="metric-value">–</div>
+        <div class="metric-label">Avg Read Latency</div>
+      </div>
+      <div class="metric-card">
+        <div id="writeLat" class="metric-value">–</div>
+        <div class="metric-label">Avg Write Latency</div>
+      </div>
+      <div class="metric-card">
+        <div id="p95Lat" class="metric-value">–</div>
+        <div class="metric-label">p95 Latency</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>Component</th><th>Latency</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>NVMe Device</td><td id="nvmeOut"></td></tr>
+        <tr><td>ESA Software</td><td id="esaOut"></td></tr>
+        <tr><td>Network + Replication</td><td id="netOut"></td></tr>
+        <tr><td>Queue / Fan-out Amplification</td><td id="queueOut"></td></tr>
+        <tr class="highlight-row">
+          <td>Total Write Latency</td><td id="totalOut"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div id="health" class="alert alert-info"></div>
+
+  </div>
+</div>
+
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>
