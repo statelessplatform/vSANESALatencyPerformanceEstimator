@@ -29,7 +29,7 @@ function recalc() {
     errors.push('vSAN ESA clusters must have between 3 and 64 hosts.');
 
   if (drives < 1 || drives > 24)
-    errors.push('NVMe drives per host must be between 1 and 32.');
+    errors.push('NVMe drives per host must be between 1 and 24.');
 
   if (vms < 1 || vms > 10000)
     errors.push('VM count must be between 1 and 10,000 per cluster.');
